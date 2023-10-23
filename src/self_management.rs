@@ -382,7 +382,7 @@ fn can_edit_channel(user: &UserId, channel: &GuildChannel, config: &SelfManageme
 		return true;
 	}
 
-	// check abadonment state
+	// check abandonment state
 	let is_abandoned = channel.last_message_id.map(|id| {
 		let created = id.created_at();
 		let now = poise::serenity_prelude::Timestamp::now();
