@@ -32,7 +32,7 @@ struct ModalReport {
 	reason: String,
 }
 
-/// Erstellt einen neuen Kanal.
+/// Erstellt einen neuen Report.
 #[poise::command(context_menu_command = "Nachricht melden", ephemeral)]
 async fn report_message(
 	ctx: Context<'_>,
