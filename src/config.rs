@@ -104,6 +104,7 @@ pub struct OPhase {
 	pub password: String,
 	pub role_name: String,
 	pub channel_name: String,
+	pub invite_code: String,
 }
 
 impl Display for FileReference {
