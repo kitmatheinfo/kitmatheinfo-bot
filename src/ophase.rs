@@ -116,7 +116,10 @@ pub async fn handle_new_guild_member(
 	trace!("Invite uses: new = {}, old = {:?}", new_invite_uses, ophase_invite_uses);
 
 	if new_invite_uses > ophase_invite_uses {
-		info!("New O-Phase member through invite: {} ({})", new_member.user.name, new_member.user.id);
+		info!(
+			"New O-Phase member through invite: {} ({})",
+			new_member.user.name, new_member.user.id
+		);
 		let role_id = get_role_id(guild.to_partial_guild(ctx.http()).await?, o_phase_config).await?;
 		new_member.add_role(ctx.http(), role_id).await?;
 	}
