@@ -7,7 +7,6 @@ mod toc;
 use std::{
 	fs::File,
 	io::Read,
-	process::exit,
 	sync::{
 		Arc,
 		Mutex,
@@ -31,16 +30,12 @@ use poise::{
 	FrameworkError,
 	FrameworkOptions,
 };
-use serenity::{
-	all::{
-		ClientBuilder,
-		CreateEmbed,
-		FullEvent,
-		Ready,
-		TeamMemberRole,
-		User,
-	},
-	prelude::CacheHttp,
+use serenity::all::{
+	ClientBuilder,
+	CreateEmbed,
+	FullEvent,
+	TeamMemberRole,
+	User,
 };
 
 use crate::ophase::get_ophase_invite_count;

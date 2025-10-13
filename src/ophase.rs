@@ -67,7 +67,7 @@ pub async fn get_ophase_invite_count(ctx: &poise::serenity_prelude::Context, rea
 				.id
 				.invites(ctx.http())
 				.await
-				.expect(&format!("Could not get invites for guild {:?}", guild.id));
+				.unwrap_or_else(|_| panic!("Could not get invites for guild {:?}", guild.id));
 			trace!("Found invites in guild {:?}: {:?}", guild, invites);
 			invite = invites.into_iter().find(|invite| invite.code == o_phase_config.invite_code);
 			if invite.is_some() {
