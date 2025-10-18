@@ -7,6 +7,10 @@ mod toc;
 use std::{
 	fs::File,
 	io::Read,
+	sync::{
+		Arc,
+		Mutex,
+	},
 };
 
 use config::Config;
@@ -34,11 +38,14 @@ use serenity::all::{
 	User,
 };
 
+use crate::ophase::get_ophase_invite_count;
+
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, AppState, Error>;
 
 pub struct AppState {
 	config: Config,
+	ophase_invite_uses: Arc<Mutex<Option<u64>>>,
 }
 
 /// Show this help menu
@@ -142,6 +149,13 @@ async fn listener<'a>(ctx: &'a poise::serenity_prelude::Context, ev: &'a FullEve
 			};
 			trace!("Incoming interaction: {:?}", interaction)
 		},
+		FullEvent::GuildMemberAddition {
+			new_member,
+		} => {
+			if let Some(o_phase_config) = &app.config.o_phase {
+				ophase::handle_new_guild_member(ctx, new_member, o_phase_config, &app.ophase_invite_uses).await?;
+			}
+		},
 		FullEvent::Ready {
 			data_about_bot,
 		} => info!("Bot is ready: {:?}", data_about_bot),
@@ -229,10 +243,13 @@ async fn main() {
 	let bot_token = config.bot_token.clone();
 
 	let framework = Framework::builder()
-		.setup(move |_ctx, _ready, _framework| {
+		.setup(move |ctx, ready, _framework| {
 			Box::pin(async move {
+				let ophase_invite_count = get_ophase_invite_count(ctx, ready, &config).await;
+				let ophase_invite_count = Arc::new(Mutex::new(ophase_invite_count));
 				Ok(AppState {
 					config,
+					ophase_invite_uses: ophase_invite_count,
 				})
 			})
 		})
@@ -244,7 +261,8 @@ async fn main() {
 		GatewayIntents::GUILDS
 			| GatewayIntents::GUILD_MESSAGES
 			| GatewayIntents::DIRECT_MESSAGES
-			| GatewayIntents::GUILD_INTEGRATIONS,
+			| GatewayIntents::GUILD_INTEGRATIONS
+			| GatewayIntents::GUILD_MEMBERS,
 	)
 	.framework(framework)
 	.await;
