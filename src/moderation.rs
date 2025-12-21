@@ -1,19 +1,7 @@
-use poise::{
-	Command,
-	CreateReply,
-};
-use serenity::{
-	all::CreateMessage,
-	builder::CreateEmbed,
-	model::prelude::ChannelId,
-	prelude::Mentionable,
-};
+use poise::{Command, CreateReply};
+use serenity::{all::CreateMessage, builder::CreateEmbed, model::prelude::ChannelId, prelude::Mentionable};
 
-use crate::{
-	AppState,
-	Context,
-	Error,
-};
+use crate::{AppState, Context, Error};
 
 const REPORT_MESSAGE_LENGTH: usize = 500;
 
