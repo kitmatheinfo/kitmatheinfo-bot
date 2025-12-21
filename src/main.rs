@@ -7,36 +7,15 @@ mod toc;
 use std::{
 	fs::File,
 	io::Read,
-	sync::{
-		Arc,
-		Mutex,
-	},
+	sync::{Arc, Mutex},
 };
 
 use config::Config;
 use env_logger::Target;
 #[allow(unused_imports)]
-use log::{
-	debug,
-	error,
-	info,
-	trace,
-	warn,
-};
-use poise::{
-	serenity_prelude::GatewayIntents,
-	CreateReply,
-	Framework,
-	FrameworkError,
-	FrameworkOptions,
-};
-use serenity::all::{
-	ClientBuilder,
-	CreateEmbed,
-	FullEvent,
-	TeamMemberRole,
-	User,
-};
+use log::{debug, error, info, trace, warn};
+use poise::{serenity_prelude::GatewayIntents, CreateReply, Framework, FrameworkError, FrameworkOptions};
+use serenity::all::{ClientBuilder, CreateEmbed, FullEvent, TeamMemberRole, User};
 
 use crate::ophase::get_ophase_invite_count;
 
@@ -56,12 +35,16 @@ async fn help(
 	#[autocomplete = "poise::builtins::autocomplete_command"]
 	command: Option<String>,
 ) -> Result<(), Error> {
-	poise::builtins::help(ctx, command.as_deref(), poise::builtins::HelpConfiguration {
-		extra_text_at_bottom: "Mit 'help <Befehl>' bekommst du weitere Hilfe zu Befehlen. Außerdem kannst du Befehle auch über \
+	poise::builtins::help(
+		ctx,
+		command.as_deref(),
+		poise::builtins::HelpConfiguration {
+			extra_text_at_bottom: "Mit 'help <Befehl>' bekommst du weitere Hilfe zu Befehlen. Außerdem kannst du Befehle auch über \
 		                       einen Slash (/) verwenden.",
-		show_context_menu_commands: true,
-		..Default::default()
-	})
+			show_context_menu_commands: true,
+			..Default::default()
+		},
+	)
 	.await?;
 	Ok(())
 }
@@ -134,9 +117,7 @@ async fn register(ctx: Context<'_>, #[flag] global: bool) -> Result<(), Error> {
 async fn listener<'a>(ctx: &'a poise::serenity_prelude::Context, ev: &'a FullEvent, app: &'a AppState) -> Result<(), Error> {
 	use serenity::model::application::Interaction;
 	match ev {
-		FullEvent::InteractionCreate {
-			interaction,
-		} => {
+		FullEvent::InteractionCreate { interaction } => {
 			if let Interaction::Component(component_interaction) = &interaction {
 				let custom_id = component_interaction.data.custom_id.as_str();
 				if custom_id.starts_with("toc:") {
@@ -149,16 +130,12 @@ async fn listener<'a>(ctx: &'a poise::serenity_prelude::Context, ev: &'a FullEve
 			};
 			trace!("Incoming interaction: {:?}", interaction)
 		},
-		FullEvent::GuildMemberAddition {
-			new_member,
-		} => {
+		FullEvent::GuildMemberAddition { new_member } => {
 			if let Some(o_phase_config) = &app.config.o_phase {
 				ophase::handle_new_guild_member(ctx, new_member, o_phase_config, &app.ophase_invite_uses).await?;
 			}
 		},
-		FullEvent::Ready {
-			data_about_bot,
-		} => info!("Bot is ready: {:?}", data_about_bot),
+		FullEvent::Ready { data_about_bot } => info!("Bot is ready: {:?}", data_about_bot),
 		_ => (),
 	};
 	Ok(())
@@ -167,14 +144,8 @@ async fn listener<'a>(ctx: &'a poise::serenity_prelude::Context, ev: &'a FullEve
 async fn on_error(error: FrameworkError<'_, AppState, Error>) {
 	use FrameworkError::*;
 	match error {
-		Setup {
-			error, ..
-		} => panic!("Failed to start bot: {:?}", error),
-		Command {
-			error,
-			ctx,
-			..
-		} => {
+		Setup { error, .. } => panic!("Failed to start bot: {:?}", error),
+		Command { error, ctx, .. } => {
 			let send_result = ctx
 				.send(
 					CreateReply::default()

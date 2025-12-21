@@ -1,35 +1,12 @@
-use std::sync::{
-	Arc,
-	Mutex,
-};
+use std::sync::{Arc, Mutex};
 
-use log::{
-	debug,
-	info,
-	trace,
-};
-use poise::{
-	Command,
-	CreateReply,
-	Modal,
-};
-use serenity::all::{
-	CacheHttp,
-	ChannelId,
-	Color,
-	CreateEmbed,
-	PartialGuild,
-	Ready,
-	RoleId,
-};
+use log::{debug, info, trace};
+use poise::{Command, CreateReply, Modal};
+use serenity::all::{CacheHttp, ChannelId, Color, CreateEmbed, PartialGuild, Ready, RoleId};
 
 use crate::{
-	config::{
-		Config,
-		OPhase,
-	},
-	AppState,
-	Error,
+	config::{Config, OPhase},
+	AppState, Error,
 };
 
 pub fn register_commands(commands: &mut Vec<Command<AppState, Error>>) {
