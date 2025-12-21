@@ -11,6 +11,9 @@ targets = [
 
 [advisories]
 yanked = "deny"
+ignore = [
+  "RUSTSEC-2024-0388", # derivative is unmaintained, but used by poise
+]
 
 [bans]
 multiple-versions = "allow"
