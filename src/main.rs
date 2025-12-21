@@ -53,10 +53,10 @@ async fn is_bot_team_admin_or_owner(ctx: Context<'_>, potential_owner: &User) ->
 	let app_info = ctx.http().get_current_application_info().await?;
 
 	// Normal owner
-	if let Some(user) = app_info.owner {
-		if user.id == potential_owner.id {
-			return Ok(true);
-		}
+	if let Some(user) = app_info.owner
+		&& user.id == potential_owner.id
+	{
+		return Ok(true);
 	}
 
 	if let Some(team) = app_info.team {
