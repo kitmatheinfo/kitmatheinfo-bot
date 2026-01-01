@@ -13,7 +13,7 @@ description = "A Discord bot for the KIT Mathe/Info Discord server."
 log = "0.4.27"
 env_logger = { version = "0.11.6" }
 serde = { version = "1.0.219", features = ["derive"] }
-serde_json = { version = "1.0.140", default-features = false, features = [
+serde_json = { version = "1.0.148", default-features = false, features = [
   "alloc",
 ] }
 serde_with = "3.12.0"
